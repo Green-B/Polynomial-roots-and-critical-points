@@ -8,9 +8,11 @@ Created on Tue Jul 14 12:20:48 2020
 import matplotlib.pyplot as plt
 import numpy as np
 
-my_figsize = [6,7]
+# Setting up the plot box and instruction box
+my_figsize = [6,8]
 my_ratios = height_ratios = [my_figsize[0]/my_figsize[1], 1-my_figsize[0]/my_figsize[1]]
-fig, [p_ax, info_ax] = plt.subplots(2, 1, height_ratios=my_ratios, figsize=my_figsize, layout="constrained")
+fig, [p_ax, info_ax] = plt.subplots(2, 1, height_ratios=my_ratios, figsize=my_figsize)
+plt.subplots_adjust(top=1, bottom=0, left=0, right=1, hspace=0, wspace=0)
 
 class PolynomialPlotBuilder:
     
@@ -26,16 +28,19 @@ class PolynomialPlotBuilder:
         self.makeInfoBox()
     
     def makeInfoBox(self):
-        info_ax.axis('off')
         my_fontsize = 14
-        info_text = "Left-click to create or grab and drag roots.\nRight-click to remove roots."
-        info_ax.text(0.5, 1, info_text, horizontalalignment="center", verticalalignment="top", fontsize=my_fontsize)
+        info_text = "Left-click in an empty area to add a root.\nLeft-click on a root and hold to drag it.\n Right-click on a root to remove it."
+        info_ax.text(0.5, 0.85, info_text, horizontalalignment="center", verticalalignment="top", fontsize=my_fontsize)
         info_ax.plot(0.25, 0.4, marker='o', linestyle='none', color='blue')
         info_ax.text(0.3, 0.4, "Roots", horizontalalignment="left", verticalalignment="center", fontsize=my_fontsize)
         info_ax.plot(0.25, 0.2, marker='o', linestyle='none', color='red')
         info_ax.text(0.3, 0.2, "Critical points", horizontalalignment="left", verticalalignment="center", fontsize=my_fontsize)
         info_ax.set_xlim([0,1])
         info_ax.set_ylim([0,1])
+        info_ax.spines[["top", "bottom", "left", "right"]].set_visible(False)
+        info_ax.set_xticks([])
+        info_ax.set_yticks([])
+        info_ax.set_facecolor("0.75")
         plt.draw()
     
     def updatePolyAndCPs(self):
@@ -48,11 +53,13 @@ class PolynomialPlotBuilder:
         p_ax.plot(np.real(self.r), np.imag(self.r), marker='o', linestyle='none', color='blue')
         p_ax.plot(np.real(self.cp), np.imag(self.cp), marker='o', linestyle='none', color='red')
         p_ax.axis('equal')
-        p_ax.axis('off')
         unitcircle = plt.Circle((0, 0), 1, color='black', fill=False)
         p_ax.add_artist(unitcircle)
-        p_ax.set_xlim([-1.5,1.5])
-        p_ax.set_ylim([-1.5,1.5])
+        p_ax.set_xlim([-1.25,1.25])
+        p_ax.set_ylim([-1.25,1.25])
+        p_ax.spines[["top", "bottom", "left", "right"]].set_visible(False)
+        p_ax.set_xticks([])
+        p_ax.set_yticks([])
         plt.draw()
     
     def nearestRoot(self, x, y):
